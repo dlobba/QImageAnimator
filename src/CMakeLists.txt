@@ -15,6 +15,7 @@ set(PROJECT_SOURCES
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QImageAnimator
+        WIN32
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
@@ -22,6 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
     add_executable(QImageAnimator
+        WIN32
         ${PROJECT_SOURCES}
     )
 
@@ -43,3 +45,35 @@ set_target_properties(QImageAnimator PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QImageAnimator)
 endif()
+
+
+install(TARGETS QImageAnimator DESTINATION bin)
+
+
+if(TARGET Qt${QT_VERSION_MAJOR}::windeployqt)
+    # execute windeployqt in a tmp directory after build
+    add_custom_command(TARGET QImageAnimator
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_CURRENT_BINARY_DIR}/windeployqt"
+        COMMAND set PATH=%PATH%$<SEMICOLON>${qt${QT_VERSION_MAJOR}_install_prefix}/bin
+        COMMAND Qt${QT_VERSION_MAJOR}::windeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/windeployqt" "$<TARGET_FILE_DIR:QImageAnimator>/$<TARGET_FILE_NAME:QImageAnimator>"
+    )
+
+    add_custom_command(TARGET QImageAnimator
+        POST_BUILD
+        COMMAND set PATH=%PATH%$<SEMICOLON>${qt${QT_VERSION_MAJOR}_install_prefix}/bin
+        COMMAND Qt${QT_VERSION_MAJOR}::windeployqt "$<TARGET_FILE_DIR:QImageAnimator>/$<TARGET_FILE_NAME:QImageAnimator>"
+    )
+
+    # copy deployment directory during installation
+    install(
+        DIRECTORY
+        "${CMAKE_CURRENT_BINARY_DIR}/windeployqt/"
+        DESTINATION bin
+    )
+endif()
+
+install(
+    PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+    DESTINATION bin-
+)
