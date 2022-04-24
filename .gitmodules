@@ -1,0 +1,3 @@
+[submodule "extern/gif-h/include/gif-h"]
+	path = extern/gif-h/include/gif-h
+	url = https://github.com/charlietangora/gif-h.git
