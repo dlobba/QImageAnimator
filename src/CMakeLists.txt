@@ -2,15 +2,15 @@
 set(TS_FILES QImageAnimator_en_US.ts)
 
 set(PROJECT_SOURCES
-        main.cpp
-        QImageAnimator.cpp
-        QImageAnimator.h
-        QImageAnimator.ui
-        QClipPlayer.cpp
-        QClipPlayer.h
-        ScreenAreaSelection.h
-        ScreenAreaSelection.cpp
-        ${TS_FILES}
+    main.cpp
+    QImageAnimator.cpp
+    QImageAnimator.h
+    QImageAnimator.ui
+    QClipPlayer.cpp
+    QClipPlayer.h
+    ScreenAreaSelection.h
+    ScreenAreaSelection.cpp
+    ${TS_FILES}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -30,10 +30,11 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
+target_link_libraries(QImageAnimator PRIVATE compiler_flags)
 target_link_libraries(QImageAnimator PRIVATE
-        Qt${QT_VERSION_MAJOR}::Core
-        Qt${QT_VERSION_MAJOR}::Gui
-        Qt${QT_VERSION_MAJOR}::Widgets)
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Gui
+    Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(QImageAnimator PRIVATE GifH)
 
 set_target_properties(QImageAnimator PROPERTIES
@@ -75,5 +76,5 @@ endif()
 
 install(
     PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-    DESTINATION bin-
+    DESTINATION bin
 )
